@@ -27,7 +27,7 @@ We can predict the lifetime value of a customer using the data provided.
 - visitNumber: The session number for this user. If this is the first session, then this is set to 1.
 - visitStartTime: The timestamp (expressed as POSIX time).
 
-### Steps
+### Notes
 
 - Challenges
   - parse the data and normalize it with json https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
@@ -64,6 +64,7 @@ We can predict the lifetime value of a customer using the data provided.
   - maybe use fast.ai as part of this
   - Always use an average model to predict unknowns, but you can always build models to attempt to improve this baseline model
   - The more supervised learning problems you think of, the better the overall model.  You build a system that relies on tons of supervised learning, maybe even the same dataset.
+  - Ensemble: maybe H2O AutoML, LightGBM, and NN (maybe use someone elses public kernel results as part of ensemble)
 
 
 - Model
@@ -77,6 +78,9 @@ We can predict the lifetime value of a customer using the data provided.
   - Classification Model to predict whether there is a conversion (Stratified)
   - Regression problem to predict the amount of the conversion on that subset
 
+
+
+  - Consider setting revenue predictions to zero for the regression for the users predicted to be 0 revenue users.
   - best features
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
       - total hits
@@ -96,9 +100,53 @@ We can predict the lifetime value of a customer using the data provided.
       - var hits per day
     - https://www.kaggle.com/erikbruin/google-analytics-eda-with-screenshots-of-the-app
       - Saturday/Sunday appear to have low sales (Very low conversion rate too)
+    - https://www.kaggle.com/nulldata/ga-eda-digital-analytics-h2o-rf-1-86
+      - pageviews
+      - hits
+      - visit number
+    - https://www.kaggle.com/prashantkikani/howmuch-train-test-data-are-different
+      - browser_category
+      - count hits per network domain
+      - month unique user count
+      - day unique user count
+      - sum hits per day
+      - var hits per day
+    - https://www.kaggle.com/plasticgrammer/customer-revenue-prediction-playground
+      - new visits
+      - channel grouping referral
+      - medium referral
+      - sub continent north america
+    - https://www.kaggle.com/scirpus/a-bit-of-gp-clustering
+      - KMeans clustering K=2 as feature
+    - https://www.kaggle.com/sudalairajkumar/simple-exploration-baseline-ga-customer-revenue
+      - visit start time
+      - metro
+      - referral path
+      - keyword
+    - https://www.kaggle.com/kailex/xgb-for-gstore-1-67
+      - pageviews max country
+    - https://www.kaggle.com/kailex/r-eda-for-gstore-xgb
+      - pageviews mean country
+      - visit start time
+      - page views mean city
+    - https://www.kaggle.com/prashanththangavel/unique-session-counts-helps-sure-lb-1-6647
+      - unique day/month/weekday session counts
+    - https://www.kaggle.com/prashantkikani/rstudio-lgb-single-model-lb1-6607
+      - hit vs view
+      - week of year
+      - max pageview WoY
+      - hit mean pageviews per network domain
+      - mean hits per day
+    - self
+      - multiply some of the best features together (including squared)
+      - use the features for both regression and the classification mask
 
+### Steps
 
 - ETL
-  -
+  - Use the code included to normalize the data into a dataframe
+  - Get all the features listed above
+- Spot Check Algorithms
+- LightGBM
 
 ### Conclusion
