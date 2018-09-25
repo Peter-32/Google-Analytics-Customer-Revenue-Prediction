@@ -21,34 +21,30 @@ from pandasql import sqldf
 # from scipy.stats import boxcox
 # from scipy.special import inv_boxcox
 
-q = lambda q: sqldf(q, globals())
+
+def q(q): return sqldf(q, globals())
 
 # ETL
+
 
 JSON_COLUMNS = ['device', 'geoNetwork', 'totals', 'trafficSource']
 df = pd.read_csv('/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-Prediction/data/train.csv',
                  converters={column: json.loads for column in JSON_COLUMNS},
                  dtype={'fullVisitorId': 'str'},
                  nrows=5)
-df.dtypes
-
-# df = df['totals'].apply(lambda x: json_normalize(x))
-# df
-
-
 building_df = pd.DataFrame()
 for index, row in df.iterrows():
     temp_dfs = []
     for column in JSON_COLUMNS:
         temp_df = json_normalize(row[column])
-        temp_df.columns = ["{}.{}".format(column, subcolumn) for subcolumn in temp_df.columns]
+        temp_df.columns = ["{}.{}".format(
+            column, subcolumn) for subcolumn in temp_df.columns]
         temp_dfs.append(temp_df)
     final_temp_df = pd.concat(temp_dfs, axis=1)
     building_df = pd.concat([building_df, final_temp_df], ignore_index=True)
-
 df.drop(JSON_COLUMNS, axis=1, inplace=True)
 df = pd.concat([df, building_df], axis=1)
 df
 
 
-df.to_csv('/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-Prediction/tables/_etl_check.csv')
+df['transactionRevenue']

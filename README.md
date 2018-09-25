@@ -31,7 +31,7 @@ We can predict the lifetime value of a customer using the data provided.
 
 - ETL
   - X Realized other kernels used json_normalize, but their code didn't work for me.
-  - Loop over dataframes and do json_normalize to build a new dataframe or something (only works one row at a time last I tried)
+  - X Loop over dataframes and do json_normalize to build a new dataframe or something (only works one row at a time last I tried)
   - Missing transactionRevenue means no transaction
   - Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
