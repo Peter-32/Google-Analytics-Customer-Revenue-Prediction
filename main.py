@@ -40,4 +40,4 @@ def load_df(csv_path='/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-
     print(f"Loaded {os.path.basename(csv_path)}. Shape: {df.shape}")
     return df
 
-print(os.listdir("../input"))
+load_df()

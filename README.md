@@ -140,5 +140,15 @@ We can predict the lifetime value of a customer using the data provided.
   - Plot feature importance for LightGBM
   - List the public leaderboard score
   - Convert to HTML and put on site
+  - Add the project tags to the site (new category values)
+
+### Project Tags
+
+- Normalize JSON
+- Upsampling
+- LightGBM
+- Models to fill NA
+- H2O AutoML
+- (Add/remove from this list)
 
 ### Conclusion
