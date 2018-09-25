@@ -36,64 +36,19 @@ df.dtypes
 # df
 
 
-
-for i in range()
-json_normalize(df['totals'][i])
-df['totals'][0]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def load_df(csv_path='/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-Prediction/data/train.csv', nrows=None):
-    JSON_COLUMNS = ['device', 'geoNetwork', 'totals', 'trafficSource']
-
-    df = pd.read_csv(csv_path,
-                     converters={column: json.loads for column in JSON_COLUMNS},
-                     dtype={'fullVisitorId': 'str'},
-                     nrows=nrows)
-
+building_df = pd.DataFrame()
+for index, row in df.iterrows():
+    temp_dfs = []
     for column in JSON_COLUMNS:
-        print(column)
-        column_as_df = json_normalize(df[column])
-        column_as_df.columns = [f"{column}.{subcolumn}" for subcolumn in column_as_df.columns]
-        df = df.drop(column, axis=1).merge(column_as_df, right_index=True, left_index=True)
-    print(f"Loaded {os.path.basename(csv_path)}. Shape: {df.shape}")
-    return df
+        temp_df = json_normalize(row[column])
+        temp_df.columns = ["{}.{}".format(column, subcolumn) for subcolumn in temp_df.columns]
+        temp_dfs.append(temp_df)
+    final_temp_df = pd.concat(temp_dfs, axis=1)
+    building_df = pd.concat([building_df, final_temp_df], ignore_index=True)
 
-
-# pd.read_csv('/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-Prediction/data/train.csv', nrows=5)
-
-
-df = load_df(nrows=5)
+df.drop(JSON_COLUMNS, axis=1, inplace=True)
+df = pd.concat([df, building_df], axis=1)
 df
 
 
-df = pd.DataFrame(load_df(nrows=5)['totals.totals'])
-
-df.columns
-
-
-df['totals.totals']
-
-
-column_as_df = json_normalize(df['totals.totals'])
-#column_as_df['totals'] = column_as_df['totals.totals']
-column_as_df
-
-
-column = "totals.totals"
-column_as_df.columns = [f"{column}.{subcolumn}" for subcolumn in column_as_df.columns]
-column_as_df = df.drop(column, axis=1).merge(column_as_df, right_index=True, left_index=True)
-column_as_df
+df.to_csv('/Users/peterjmyers/Work/Google-Analytics-Customer-Revenue-Prediction/tables/_etl_check.csv')
