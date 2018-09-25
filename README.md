@@ -27,25 +27,10 @@ We can predict the lifetime value of a customer using the data provided.
 - visitNumber: The session number for this user. If this is the first session, then this is set to 1.
 - visitStartTime: The timestamp (expressed as POSIX time).
 
-### Notes
-
-- Challenges
-  - parse the data and normalize it with json https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
-  - Stratified sampling of 0 values of target https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
-    - only around 1.27% of sessions led to a transaction
-    - Should I convert this to a classification problem, then do a regression on top of all the ones with positive revenue?  I think so.
-  - understanding missingness https://www.kaggle.com/mithrillion/finding-useful-information-in-missingness
-    - focus on the best features
-    - build a model to predict these missing values one model at a time (primarily the most important features)
-  - might be a few duplicates based on sessionId
-  - Might need to group "sources" together that are similar.
-
-
-
 ### Steps
 
 - ETL
-  - Use the code included to normalize the data into a dataframe
+  - Use the code from another kernel to normalize the data into a dataframe
   - Missing transactionRevenue means no transaction
   - Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
@@ -127,21 +112,33 @@ We can predict the lifetime value of a customer using the data provided.
   - Consider adding steps to prepare data based on exploration
 - Prepare Data
   - Clean
+    - Might be a few duplicates based on sessionId
+    - Might need to group "sources" together that are similar.
     - Missing Data
-      - Model to predict the value of missing fields, then fill them in: (Choose the most likely classification or numeric?)
+      - Build a baseline (mean/mode) model and LightGBM model to fill in the values for the following:
         - 100 missing page views
         - 69 missing trafficSource.source
         - 1468 missing network country
         - 542491 missing network city  
         - 390915 missing network domain
         - 536056 missing network regions
-
+      - Verify that all these missing values are filled in
+      - Fill in the rest of the missing values with mean/mode
+  - Upsample to 33% non-zero revenue (Use this for classification, and not yet for regression)
 - Spot Check Algorithms
-
-  - LightGBM seems to work well
-
-- best features
-
-
+  - Iteratively create a CV and test the CV score against the public leaderboard
+  - LightGBM CV, and Kaggle submission
+- Improve Results
+  - Try with/without stratified sampling for the regression
+  - stratified binary classification whether nonzero & Regression run as normal.  Modify the regression value to 0 if the classification is class 0.  Compare results with/without classification.
+  - From the above two points, choose the preferred answer
+  - Quickly skim high scoring kernels
+  - If time, check prediction distribution, error analysis, hard examples
+  - If time, do course/fine grid search on LightGBM
+  - Lastly, Ensemble: maybe H2O AutoML with LightGBM (Compare CV if better with/without h2o?)
+- Present Results
+  - Plot feature importance for LightGBM
+  - List the public leaderboard score
+  - Convert to HTML and put on site
 
 ### Conclusion
