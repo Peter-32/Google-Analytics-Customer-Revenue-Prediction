@@ -2,11 +2,11 @@
 
 ### Question
 
-Can we predict the lifetime value of a customer with the provided dataset?
+Can we predict the lifetime value of a customer with the provided dataset?  Planning to give my best effort without spending over 20 hours on this project.
 
 ### Hypothesis
 
-We can predict the lifetime value of a customer using the data provided.
+We can predict the lifetime value of a customer using the data provided.  
 
 ### Data Sources
 
@@ -41,47 +41,13 @@ We can predict the lifetime value of a customer using the data provided.
   - Might need to group "sources" together that are similar.
 
 
-- Notes
+
+### Steps
+
+- ETL
+  - Use the code included to normalize the data into a dataframe
   - Missing transactionRevenue means no transaction
-  - LightGBM seems to work well
-  - Convert project to R if doing well at end
-  - Course grain, to fine grain, and understand reasoning for features in each model.
-  - Classification problem
-    - Check conversion rate by month
-    - Check conversion rate by week day
-    - Check conversion rate by medium
-    - Check conversion rate by source
-    - Check conversion rate by device category
-    - Check conversion rate by os
-    - Check conversion rate by country
-    - Check conversion rate by city
-    - Check conversion rate by domains
-    - Check conversion rate by regions
-  - A second classification problem to classify as likely a high/medium/low revenue
-  - Lastly a regression problem to classify as the amount (subset) (All this multiple model stuff with regression/classification might be bad because you have less data)
-  - Social has many clicks but practically no revenue (Important for classification)
-  - Remove the unnecessary to find the solution/problem
-  - maybe use fast.ai as part of this
-  - Always use an average model to predict unknowns, but you can always build models to attempt to improve this baseline model
-  - The more supervised learning problems you think of, the better the overall model.  You build a system that relies on tons of supervised learning, maybe even the same dataset.
-  - Ensemble: maybe H2O AutoML, LightGBM, and NN (maybe use someone elses public kernel results as part of ensemble)
-
-
-- Model
-  - Model to predict the value of missing fields, then fill them in: (Choose the most likely classification or numeric?)
-    - 100 missing page views
-    - 69 missing trafficSource.source
-    - 1468 missing network country
-    - 542491 missing network city  
-    - 390915 missing network domain
-    - 536056 missing network regions
-  - Classification Model to predict whether there is a conversion (Stratified)
-  - Regression problem to predict the amount of the conversion on that subset
-
-
-
-  - Consider setting revenue predictions to zero for the regression for the users predicted to be 0 revenue users.
-  - best features
+  - Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
       - total hits
       - total pageviews
@@ -140,13 +106,42 @@ We can predict the lifetime value of a customer using the data provided.
     - self
       - multiply some of the best features together (including squared)
       - use the features for both regression and the classification mask
+    - Forgot
+      - Classification problem (average CR)
+      - Check conversion rate by month
+      - Check conversion rate by week day
+      - Check conversion rate by medium
+      - Check conversion rate by source
+      - Check conversion rate by device category
+      - Check conversion rate by os
+      - Check conversion rate by country
+      - Check conversion rate by city
+      - Check conversion rate by domains
+      - Check conversion rate by regions
+- Exploration
+  - What should be cleaned?
+  - % in train/test with 0 revenue
+  - two color density plot of distribution of non-zero revenue
+  - one variable plots
+  - two variable plots
+  - Consider adding steps to prepare data based on exploration
+- Prepare Data
+  - Clean
+    - Missing Data
+      - Model to predict the value of missing fields, then fill them in: (Choose the most likely classification or numeric?)
+        - 100 missing page views
+        - 69 missing trafficSource.source
+        - 1468 missing network country
+        - 542491 missing network city  
+        - 390915 missing network domain
+        - 536056 missing network regions
 
-### Steps
-
-- ETL
-  - Use the code included to normalize the data into a dataframe
-  - Get all the features listed above
 - Spot Check Algorithms
-- LightGBM
+
+  - LightGBM seems to work well
+
+- best features
+
+
 
 ### Conclusion
