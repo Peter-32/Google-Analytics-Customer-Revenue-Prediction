@@ -23,7 +23,7 @@ We can predict the lifetime value of a customer using the data provided.
 - socialEngagementType: Engagement type, either "Socially Engaged" or "Not Socially Engaged".
 - totals: This section contains aggregate values across the session.
 - trafficSource: This section contains information about the Traffic Source from which the session originated.
-- visitId: An identifier for this session. This is part of the value usually stored as the _utmb cookie. This is only unique to the user. For a completely unique ID, you should use a combination of fullVisitorId and visitId.
+- visitId: An identifier for this session. This is part of the value usually stored as the utmb cookie. This is only unique to the user. For a completely unique ID, you should use a combination of fullVisitorId and visitId.
 - visitNumber: The session number for this user. If this is the first session, then this is set to 1.
 - visitStartTime: The timestamp (expressed as POSIX time).
 
@@ -32,8 +32,8 @@ We can predict the lifetime value of a customer using the data provided.
 - ETL
   - X Realized other kernels used json_normalize, but their code didn't work for me.
   - X Loop over dataframes and do json_normalize to build a new dataframe or something (only works one row at a time last I tried)
-  - Missing transactionRevenue means no transaction
-  - Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
+  - X Missing transactionRevenue means no transaction
+  - X Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
       - total hits
       - total pageviews
