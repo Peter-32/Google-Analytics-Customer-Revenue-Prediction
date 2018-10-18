@@ -35,11 +35,11 @@ We can predict the lifetime value of a customer using the data provided.
   - X Missing transactionRevenue means no transaction
   - X Features (Give credit for the feature names found on Kernels, won't copy anyone's feature engineering code)
     - https://www.kaggle.com/youhanlee/stratified-sampling-for-regression-lb-1-6595
-      - total hits
-      - total pageviews
-      - trafficSource.source
-      - network country
-      - network city  
+      - X total hits
+      - X total pageviews
+      - X trafficSource.source
+      - X network country
+      - X network city  
       - month unique user count
       - mean hits per network domain
       - day unique user count

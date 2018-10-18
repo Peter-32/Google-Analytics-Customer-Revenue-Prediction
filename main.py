@@ -20,8 +20,8 @@ from pandasql import sqldf
 # from sklearn.pipeline import Pipeline
 # from scipy.stats import boxcox
 # from scipy.special import inv_boxcox
-pd.options.display.html.table_schema = False
-pd.options.display.max_rows = None
+# pd.options.display.html.table_schema = False
+# pd.options.display.max_rows = None
 
 
 def q(q): return sqldf(q, globals())
@@ -81,4 +81,8 @@ df.columns
 #       dtype='object')
 
 target_name = 'totals.transactionRevenue'
-feature_names = ['totals.hits']
+feature_names = ['totals.hits', 'totals.pageviews', 'trafficSource.source', 'geoNetwork.country',
+'geoNetwork.city', ]
+
+
+'fullVisitorId'
