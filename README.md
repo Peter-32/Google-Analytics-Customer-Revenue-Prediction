@@ -40,12 +40,12 @@ We can predict the lifetime value of a customer using the data provided.
       - X trafficSource.source
       - X network country
       - X network city  
-      - month unique user count
-      - mean hits per network domain
-      - day unique user count
-      - network domain
-      - network region
-      - mean hits per day
+      - X month unique user count
+      - X mean hits per network domain
+      - X day unique user count
+      - X network domain
+      - X network region
+      - X mean hits per day
       - mean page views per network domain
       - count hits per network domain
       - total new visits
