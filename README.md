@@ -46,7 +46,7 @@ We can predict the lifetime value of a customer using the data provided.
       - X network domain
       - X network region
       - X mean hits per day
-      - mean page views per network domain
+      - X mean page views per network domain
       - count hits per network domain
       - total new visits
       - var hits per day
