@@ -29,6 +29,7 @@ We can predict the lifetime value of a customer using the data provided.
 
 ### Steps
 
+- Pass a parameter to start at step X
 - ETL
   - X Realized other kernels used json_normalize, but their code didn't work for me.
   - X Loop over dataframes and do json_normalize to build a new dataframe or something (only works one row at a time last I tried)
@@ -47,22 +48,21 @@ We can predict the lifetime value of a customer using the data provided.
       - X network region
       - X mean hits per day
       - X mean page views per network domain
-      - count hits per network domain
-      - total new visits
-      - var hits per day
+      - X count hits per network domain
+      - X total new visits
     - https://www.kaggle.com/erikbruin/google-analytics-eda-with-screenshots-of-the-app
-      - Saturday/Sunday appear to have low sales (Very low conversion rate too)
+      - X Saturday/Sunday appear to have low sales (Very low conversion rate too)
     - https://www.kaggle.com/nulldata/ga-eda-digital-analytics-h2o-rf-1-86
-      - pageviews
-      - hits
-      - visit number
+      - X pageviews
+      - X hits
+      - X visit number
     - https://www.kaggle.com/prashantkikani/howmuch-train-test-data-are-different
-      - browser_category
-      - count hits per network domain
-      - month unique user count
-      - day unique user count
-      - sum hits per day
-      - var hits per day
+      - X browser_category
+      - X count hits per network domain
+      - X month unique user count
+      - X day unique user count
+      - X sum hits per day
+      - X var hits per day
     - https://www.kaggle.com/plasticgrammer/customer-revenue-prediction-playground
       - new visits
       - channel grouping referral
@@ -149,7 +149,10 @@ We can predict the lifetime value of a customer using the data provided.
 - Upsampling
 - LightGBM
 - Models to fill NA
-- H2O AutoML
-- (Add/remove from this list)
+- Marketing
+
+### Notes
+
+The data is at the session level, but predictions at user level.  Will ignore this until the final scoring.
 
 ### Conclusion
