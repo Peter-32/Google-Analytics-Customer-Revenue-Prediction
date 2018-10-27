@@ -64,28 +64,28 @@ We can predict the lifetime value of a customer using the data provided.
       - X sum hits per day
       - X var hits per day
     - https://www.kaggle.com/plasticgrammer/customer-revenue-prediction-playground
-      - new visits
-      - channel grouping referral
-      - medium referral
-      - sub continent north america
+      - X new visits
+      - X channel grouping referral
+      - X medium referral
+      - X sub continent north america
     - https://www.kaggle.com/scirpus/a-bit-of-gp-clustering
-      - KMeans clustering K=2 as feature
+      - X KMeans clustering K=2 as feature
     - https://www.kaggle.com/sudalairajkumar/simple-exploration-baseline-ga-customer-revenue
-      - visit start time
-      - metro
-      - referral path
-      - keyword
+      - X visit start time
+      - X metro
+      - X referral path
+      - X keyword
     - https://www.kaggle.com/kailex/xgb-for-gstore-1-67
-      - pageviews max country
+      - X pageviews max country
     - https://www.kaggle.com/kailex/r-eda-for-gstore-xgb
-      - pageviews mean country
-      - visit start time
-      - page views mean city
+      - X pageviews mean country
+      - X visit start time
+      - X page views mean city
     - https://www.kaggle.com/prashanththangavel/unique-session-counts-helps-sure-lb-1-6647
-      - unique day/month/weekday session counts
+      - X unique day/month/weekday session counts
     - https://www.kaggle.com/prashantkikani/rstudio-lgb-single-model-lb1-6607
-      - hit vs view
-      - week of year
+      - X hit vs view
+      - X week of year
       - max pageview WoY
       - hit mean pageviews per network domain
       - mean hits per day
@@ -128,6 +128,7 @@ We can predict the lifetime value of a customer using the data provided.
   - Upsample to 33% non-zero revenue (Use this for classification, and not yet for regression)
 - Spot Check Algorithms
   - Iteratively create a CV and test the CV score against the public leaderboard
+  - Try 30 regression algorithms
   - LightGBM CV, and Kaggle submission
 - Improve Results
   - Try with/without stratified sampling for the regression

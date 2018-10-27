@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from json import loads
 from pandas.io.json import json_normalize
 from pandasql import sqldf
+from sklearn.cluster import KMeans
 # import seaborn as sns
 # import numpy as np
 #import missingno as msno
@@ -45,7 +46,7 @@ class ETL():
             building_df = concat([building_df, final_temp_df], ignore_index=True)
         df.drop(JSON_COLUMNS, axis=1, inplace=True)
         df = concat([df, building_df], axis=1)
-        print(df.columns)
+        df.to_csv("tables/_rows_5000.csv")
         return df
 
     def fix_transaction_revenue(self, df):
@@ -56,6 +57,13 @@ class ETL():
         for column in ['totals.bounces', 'totals.hits', 'totals.newVisits', 'totals.pageviews', 'totals.transactionRevenue', 'totals.visits']:
             df[column] = to_numeric(df[column], errors="coerce")
         return df
+
+    def add_k_means_cluster_id(self, df):
+        X = df[['visitNumber','totals.bounces','totals.hits','totals.newVisits','totals.pageviews','totals.visits']].values
+        kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
+        df.loc[:, 'cluster_ids'] = kmeans.labels_
+        return df, kmeans
+        # kmeans.predict([[0, 0], [4, 4]])
 
 #
 # Index(['channelGrouping', 'date', 'fullVisitorId', 'sessionId',
@@ -96,14 +104,31 @@ class ETL():
           , a.`geoNetwork.region` AS region
           , CASE WHEN strftime('%w', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) IN ('0', '6') THEN 1 ELSE 0 END AS is_weekend
           , a.`device.deviceCategory` AS device_category
-          , a.visitNumber
+          , a.visitNumber AS visit_number
+          , a.`totals.newVisits` AS new_visits
+          , a.`channelGrouping` AS channel_grouping
+          , a.`trafficSource.medium` AS medium
+          , IF(a.`geoNetwork.subContinent` = 'Northern America', 1, 0) AS is_sub_continent_north_america
+          , a.visitStartTime AS visit_start_time
+          , a.`geoNetwork.metro` AS metro
+          , a.`trafficSource.referralPath` AS referral_path
+          , a.cluster_id
+          , a.`trafficSource.keyword` AS keyword
+          , a.`totals.hits` / a.`totals.pageviews` AS hits_per_pageview
+          , CAST(strftime('%W', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS unsigned) AS week_of_year 
           , b.month_unique_user_count
-          , c.hits_per_network_domain
-          , c.mean_hits_per_network_domain
-          , c.mean_page_views_per_network_domain
+          , b.month_unique_sessions
+          , c.network_domain_hits
+          , c.network_domain_mean_hits
+          , c.network_domain_mean_page_views
           , d.day_unique_user_count
-          , d.mean_hits_per_day
-          , d.var_like_formula_hits_per_day
+          , d.day_mean_hits
+          , d.day_var_like_formula_hits
+          , d.day_unique_sessions
+          , e.country_max_pageviews
+          , e.country_mean_pageviews
+          , f.city_mean_pageviews
+          , g.weekday_unique_sessions
 
         from df a
         INNER JOIN
@@ -112,6 +137,7 @@ class ETL():
                 SUBSTR(date, 0, 5) year
               , CAST(SUBSTR(date, 5, 2) AS int) month
               , COUNT(distinct fullVisitorId) AS month_unique_user_count
+              , COUNT(distinct fullVisitorId || "_" || visitId) AS month_unique_sessions
             FROM df
             GROUP BY 1,2
             ) b ON b.year = SUBSTR(a.date, 0, 5)
@@ -120,9 +146,9 @@ class ETL():
             (
             SELECT
                 `geoNetwork.networkDomain`
-              , SUM(`totals.hits`) AS hits_per_network_domain
-              , AVG(`totals.hits`) AS mean_hits_per_network_domain
-              , AVG(`totals.pageviews`) AS mean_page_views_per_network_domain
+              , SUM(`totals.hits`) AS network_domain_hits
+              , AVG(`totals.hits`) AS network_domain_mean_hits
+              , AVG(`totals.pageviews`) AS network_domain_mean_page_views
             FROM df
             GROUP BY 1
             ) c ON c.`geoNetwork.networkDomain` = a.`geoNetwork.networkDomain`
@@ -131,11 +157,37 @@ class ETL():
             SELECT
                 date
               , COUNT(distinct fullVisitorId) AS day_unique_user_count
-              , AVG(`totals.hits`) AS mean_hits_per_day
-              , (SUM(`totals.hits` * `totals.hits`) / COUNT(*)) - ((SUM(`totals.hits`)/COUNT(*))*(SUM(`totals.hits`)/COUNT(*))) AS var_like_formula_hits_per_day
+              , AVG(`totals.hits`) AS day_mean_hits
+              , (SUM(`totals.hits` * `totals.hits`) / COUNT(*)) - ((SUM(`totals.hits`)/COUNT(*))*(SUM(`totals.hits`)/COUNT(*))) AS day_var_like_formula_hits
+              , COUNT(distinct fullVisitorId || "_" || visitId) AS day_unique_sessions
             FROM df
             GROUP BY 1
             ) d ON d.date = a.date
+        INNER JOIN
+            (
+            SELECT
+                geoNetwork.country
+              , MAX(`totals.pageviews`) AS country_max_pageviews
+              , AVG(`totals.pageviews`) AS country_mean_pageviews
+            FROM df
+            GROUP BY 1
+            ) e ON e.`geoNetwork.country` = a.`geoNetwork.country`
+        INNER JOIN
+            (
+            SELECT
+                geoNetwork.city
+              , AVG(`totals.pageviews`) AS city_mean_pageviews
+            FROM df
+            GROUP BY 1
+            ) f ON f.`geoNetwork.city` = a.`geoNetwork.city`
+        INNER JOIN
+            (
+            SELECT
+                strftime('%w', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS weekday
+              , COUNT(distinct fullVisitorId || "_" || visitId) AS weekday_unique_sessions
+            FROM df a
+            GROUP BY 1
+            ) g ON g.weekday = strftime('%w', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2))
         """, locals())
 
     def save(self, df):
@@ -147,6 +199,7 @@ if __name__ == '__main__':
     df = etl.get_json_columns(df)
     df = etl.fix_transaction_revenue(df)
     df = etl.convert_columns_to_numeric(df)
+    df, kmeans = etl.add_k_means_cluster_id(df)
     df = etl.get_initial_features(df)
     etl.save(df)
     print(df.head())
