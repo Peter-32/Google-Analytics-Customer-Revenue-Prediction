@@ -86,12 +86,12 @@ We can predict the lifetime value of a customer using the data provided.
     - https://www.kaggle.com/prashantkikani/rstudio-lgb-single-model-lb1-6607
       - X hit vs view
       - X week of year
-      - max pageview WoY
-      - hit mean pageviews per network domain
-      - mean hits per day
+      - X max pageview WoY
+      - X hit mean pageviews per network domain
+      - X mean hits per day
     - self
-      - multiply some of the best features together (including squared)
-      - use the features for both regression and the classification mask
+      - X multiply some of the best features together (including squared)
+      - X use the features for both regression and the classification mask
     - Forgot
       - Classification problem (average CR)
       - Check conversion rate by month

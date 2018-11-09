@@ -115,7 +115,7 @@ class ETL():
           , a.cluster_id
           , a.`trafficSource.keyword` AS keyword
           , a.`totals.hits` / a.`totals.pageviews` AS hits_per_pageview
-          , CAST(strftime('%W', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS unsigned) AS week_of_year 
+          , CAST(strftime('%W', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS unsigned) AS week_of_year
           , b.month_unique_user_count
           , b.month_unique_sessions
           , c.network_domain_hits
@@ -129,6 +129,7 @@ class ETL():
           , e.country_mean_pageviews
           , f.city_mean_pageviews
           , g.weekday_unique_sessions
+          , h.week_of_year_max_pageviews
 
         from df a
         INNER JOIN
@@ -188,6 +189,15 @@ class ETL():
             FROM df a
             GROUP BY 1
             ) g ON g.weekday = strftime('%w', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2))
+        INNER JOIN
+            (
+            SELECT
+                CAST(strftime('%W', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS unsigned) AS week_of_year
+              , MAX(`totals.pageviews`) AS week_of_year_max_pageviews
+            FROM df a
+            GROUP BY 1
+            ) h ON h.week_of_year = CAST(strftime('%W', substr(a.date,0,5) || "-" || substr(a.date,5,2) || "-" || substr(a.date,7,2)) AS unsigned)
+
         """, locals())
 
     def save(self, df):
